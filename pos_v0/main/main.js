@@ -1,13 +1,33 @@
-function printReceipt(inputs) {
-  var totalprice = 0;
-  var expectText = '***<没钱赚商店>收据***' + '\n';
-  for(var x = 0; x < inputs.length; x++){
-      var subtotal = inputs[x].price * inputs[x].count;
-      var expectText = expectText + '名称' +'：'+ inputs[x].name + '，'  + '数量' + '：' + inputs[x].count + inputs[x].unit + '，'
-                       + '单价' + '：' +(inputs[x].price).toFixed(2) + '(元)' + '，' + '小计' + '：' + subtotal.toFixed(2) + '(元)' +'\n';
-      totalprice += subtotal;
-  }
-  expectText = expectText + '----------------------' + '\n'+ '总计'+ '：'
-               + totalprice.toFixed(2) + '(元)' + '\n' + '**********************';
-  console.log(expectText);
+function printReceipt(items) {
+  var receipt = '***<没钱赚商店>收据***' + '\n'+
+                  getItemString(items)+
+                 '----------------------' + '\n'+
+                 '总计'+ '：'+ formatPrice(getTotalPrice(items)) + '(元)' + '\n' +
+                 '**********************';
+  console.log(receipt);
+}
+function formatPrice(price) {
+  return price.toFixed(2);
+}
+function getSubtotal(count,price){
+  return count*price;
+}
+
+function getTotalPrice(items){
+    var totalPrice = 0;
+    items.forEach(function(item){
+      totalPrice += getSubtotal(item.count,item.price)
+    });
+    return totalPrice;
+}
+
+function getItemString(items){
+  var itemString = '';
+  items.forEach(function(item){
+    itemString +=  '名称' + '：'+ item.name + '，'+
+                   '数量' + '：' + item.count + item.unit + '，'+
+                   '单价' + '：' + formatPrice(item.price) + '(元)' + '，' +
+                   '小计' + '：' + formatPrice(getSubtotal(item.count,item.price)) + '(元)' +'\n';
+    });
+  return itemString;
 }
