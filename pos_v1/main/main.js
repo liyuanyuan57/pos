@@ -1,6 +1,8 @@
 function printReceipt(tagItems) {
   var cartItems = getCartItems(tagItems);
-  console.log(cartItems);
+  var promotionItems = getPromotionItems(cartItems);
+  console.log(promotionItems);
+  //console.log(findPromotionItem(loadPromotions(),'ITEM000000'));
 /*  var receipt = '***<没钱赚商店>收据***' + '\n'+
                   getItemString(cartItems)+
                  '----------------------' + '\n'+
@@ -48,29 +50,36 @@ function findCartItem(cartItems,barcode){
    return findCartItem;
 }
 
- function findPromotionItem(promotionBarcodes,barcode){
-   for(var m = 0;m < promotionBarcodes.length;m++){
-     if(promotionBarcodes[m] === barcode){
-       return promotionBarcodes[m];
-     }
-   }
- }
- function getPromotionItems(cartItems)
-{
-  var allPromotionItems = loadPromotions();
+function findPromotionItem(promotionItems,barcode){
+  for(var m = 0;m < promotionItems.length;m++){
+    if(promotionItems[m].barcodes.indexOf(barcode) !== -1){
+      return promotionItems[m];
+    }
+  }
+}
+function getPromotionItems(cartItems){
   cartItems.forEach(function(cartItem){
-    var promotionItem = findPromotionItem(allPromotionItems[0].barcodes,cartItem.item.barcode);
+    var promotionItem = findPromotionItem(loadPromotions(),cartItem.item.barcode);
     if(promotionItem){
-      if(cartItem.totalCount >= 3){
-        cartItem.discount = parseInt(cartItem.totalCount/ 3,10);
-      }
+      cartItem.discount = getDiscount(promotionItem,cartItem.count);
       cartItem.promotionFlag = true;
-    } else {
+    }else{
       cartItem.discount = 0;
     }
-    cartItem.finalcount = cartItem.totalCount - cartItem.discount;
+    cartItem.finalcount = cartItem.count - cartItem.discount;
   });
   return cartItems;
+}
+
+function getDiscount(promotionItem,count){
+  var discount = 0;
+  if(promotionItem.type === 'BUY_TWO_GET_ONE_FREE'){
+       return discount = buyTwoGetOneFree(count);
+  }
+}
+function buyTwoGetOneFree(count){
+  var discount = parseInt(count / 3);
+  return discount;
 }
 
 function formatPrice(price) {
