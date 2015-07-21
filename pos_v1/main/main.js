@@ -1,17 +1,15 @@
 function printReceipt(tagItems) {
-  var cartItems = getCartItems(tagItems);
-  var promotionItems = getPromotionItems(cartItems);
-  console.log(promotionItems);
-  //console.log(findPromotionItem(loadPromotions(),'ITEM000000'));
-/*  var receipt = '***<没钱赚商店>收据***' + '\n'+
+  var tempcartItems = getCartItems(tagItems);
+  var cartItems = getPromotionItems(tempcartItems);
+  var receipt = '***<没钱赚商店>收据***' + '\n'+
                   getItemString(cartItems)+
                  '----------------------' + '\n'+
-                 '挥泪赠送商品：\n' + getPromotionItemString(cartItems)+
+                 '挥泪赠送商品：\n' + getPromotionString(cartItems)+
                  '----------------------' + '\n'+
                  '总计'+ '：'+ formatPrice(getTotalPrice(cartItems)) + '(元)' +
-                 '\n节省'+ '：'+ formatPrice(getTotalSavePrice(cartItems)) + '(元)' +
+                 '\n节省'+ '：'+ formatPrice(getSavePrice(cartItems)) + '(元)' +
                  '\n**********************';
-  console.log(receipt);*/
+  console.log(receipt);
 }
 
 function getItem(barcode){
@@ -31,11 +29,11 @@ function getCartItems(tagItems){
     var count = parseFloat(tagItem[1]) || 1;
     var item = getItem(barcode);
     var cartItem = findCartItem(cartItems,barcode);
-      if(cartItem){
-        cartItem.count += count;
-      } else {
-        cartItems.push({item:item,count:count});
-      }
+    if(cartItem){
+      cartItem.count += count;
+    }else{
+      cartItems.push({item:item,count:count});
+    }
   });
   return cartItems;
 }
@@ -43,7 +41,7 @@ function getCartItems(tagItems){
 function findCartItem(cartItems,barcode){
   for(var n = 0; n < cartItems.length; n++){
     if(cartItems[n].item.barcode === barcode){
-      return  cartItems[n];
+      return cartItems[n];
     }
   }
 }
@@ -55,6 +53,7 @@ function findPromotionItem(promotionItems,barcode){
     }
   }
 }
+
 function getPromotionItems(cartItems){
   cartItems.forEach(function(cartItem){
     var promotionItem = findPromotionItem(loadPromotions(),cartItem.item.barcode);
@@ -68,12 +67,14 @@ function getPromotionItems(cartItems){
   });
   return cartItems;
 }
+
 function getDiscount(promotionItem,count){
   var discount = 0;
   if(promotionItem.type === 'BUY_TWO_GET_ONE_FREE'){
-       return discount = buyTwoGetOneFree(count);
+  return discount = buyTwoGetOneFree(count);
   }
 }
+
 function buyTwoGetOneFree(count){
   var discount = parseInt(count / 3);
   return discount;
@@ -82,6 +83,7 @@ function buyTwoGetOneFree(count){
 function formatPrice(price) {
   return price.toFixed(2);
 }
+
 function getSubtotal(count,price){
   return count*price;
 }
@@ -93,10 +95,11 @@ function getTotalPrice(cartItems){
     });
     return totalPrice;
 }
-function getTotalSavePrice(cartItems){
+
+function getSavePrice(cartItems){
     var totalSavePrice = 0;
     cartItems.forEach(function(cartItem){
-      totalSavePrice += getSubPrice(cartItem.discount, cartItem.item.price);
+      totalSavePrice += getSubtotal(cartItem.discount, cartItem.item.price);
     });
     return totalSavePrice;
 }
@@ -104,20 +107,22 @@ function getTotalSavePrice(cartItems){
 function getItemString(cartItems){
   var itemString = '';
   cartItems.forEach(function(cartItem){
+    var subTotal = formatPrice(getSubtotal(cartItem.finalcount,cartItem.item.price));
     itemString +=  '名称' + '：'+ cartItem.item.name + '，'+
-                   '数量' + '：' + cartItem.totalCount +cartItem.item.unit + '，'+
+                   '数量' + '：' + cartItem.count +cartItem.item.unit + '，'+
                    '单价' + '：' + formatPrice(cartItem.item.price) + '(元)' + '，' +
-                   '小计' + '：' + formatPrice(getSubtotal(cartItem.finalcount,cartItem.item.price)) + '(元)' +'\n';
+                   '小计' + '：' + subTotal + '(元)' +'\n';
     });
   return itemString;
 }
-function getPromotionItemString(cartItems){
-  var promotionItemString = '';
+
+function getPromotionString(cartItems){
+  var promotionString = '';
   cartItems.forEach(function(cartItem){
     if(cartItem.promotionFlag === true){
-    promotionItemString +=  '名称' + '：'+ cartItem.item.name + '，'+
+    promotionString +=  '名称' + '：'+ cartItem.item.name + '，'+
                             '数量' + '：' + cartItem.discount +cartItem.item.unit + '\n';
      }
   });
-  return promotionItemString;
+  return promotionString;
 }
