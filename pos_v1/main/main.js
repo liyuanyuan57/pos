@@ -41,13 +41,11 @@ function getCartItems(tagItems){
 }
 
 function findCartItem(cartItems,barcode){
-  var findCartItem;
-   cartItems.forEach(function(cartItem){
-     if(cartItem.item.barcode === barcode){
-      return  findCartItem = cartItem;
-     }
-   });
-   return findCartItem;
+  for(var n = 0; n < cartItems.length; n++){
+    if(cartItems[n].item.barcode === barcode){
+      return  cartItems[n];
+    }
+  }
 }
 
 function findPromotionItem(promotionItems,barcode){
@@ -70,7 +68,6 @@ function getPromotionItems(cartItems){
   });
   return cartItems;
 }
-
 function getDiscount(promotionItem,count){
   var discount = 0;
   if(promotionItem.type === 'BUY_TWO_GET_ONE_FREE'){
@@ -96,13 +93,10 @@ function getTotalPrice(cartItems){
     });
     return totalPrice;
 }
-function getSavePrice(count,price){
-  return count*price;
-}
 function getTotalSavePrice(cartItems){
     var totalSavePrice = 0;
     cartItems.forEach(function(cartItem){
-      totalSavePrice += getSavePrice(cartItem.discount, cartItem.item.price);
+      totalSavePrice += getSubPrice(cartItem.discount, cartItem.item.price);
     });
     return totalSavePrice;
 }
