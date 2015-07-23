@@ -30,6 +30,6 @@ function getDiscount(promotionItem,count){
   }
 
 function buyTwoGetOneFree(count){
-  var discount = parseInt(count / 3);
+  var discount = Math.floor(count / 3);
   return discount;
   }
