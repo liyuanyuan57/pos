@@ -4,19 +4,19 @@ function TempCart(tagItems) {
 
 TempCart.prototype.getTempCartItems = function(){
   var cartItems = [];
-    this.tagItems.forEach(function(tagItem){
-      var tagItem = tagItem.split('-');
-      var barcode = tagItem[0];
-      var count = parseFloat(tagItem[1]) || 1;
-      var item = getItem(barcode);
-      var cartItem = findCartItem(cartItems,barcode);
-      if(cartItem){
-        cartItem.count += count;
-      }else{
-        cartItems.push({item:item,count:count});
-      }
-    });
-    return cartItems;
+  this.tagItems.forEach(function(tagItem){
+    var tagItem = tagItem.split('-');
+    var barcode = tagItem[0];
+    var count = parseFloat(tagItem[1]) || 1;
+    var item = getItem(barcode);
+    var cartItem = findCartItem(cartItems,barcode);
+    if(cartItem){
+      cartItem.count += count;
+    }else{
+      cartItems.push({item:item,count:count});
+    }
+  });
+  return cartItems;
 };
 
 
