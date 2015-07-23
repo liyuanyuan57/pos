@@ -1,6 +1,7 @@
 function TempCart(tagItems) {
-this.tagItems = tagItems;
+  this.tagItems = tagItems;
 }
+
 TempCart.prototype.getTempCartItems = function(){
   var cartItems = [];
     this.tagItems.forEach(function(tagItem){
