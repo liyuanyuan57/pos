@@ -71,7 +71,7 @@ function getPromotionItems(cartItems){
 function getDiscount(promotionItem,count){
   var discount = 0;
   if(promotionItem.type === 'BUY_TWO_GET_ONE_FREE'){
-  return discount = buyTwoGetOneFree(count);
+    return discount = buyTwoGetOneFree(count);
   }
 }
 
@@ -89,19 +89,19 @@ function getSubtotal(count,price){
 }
 
 function getTotalPrice(cartItems){
-    var totalPrice = 0;
-    cartItems.forEach(function(cartItem){
-      totalPrice += getSubtotal(cartItem.finalcount,cartItem.item.price)
-    });
-    return totalPrice;
+  var totalPrice = 0;
+  cartItems.forEach(function(cartItem){
+    totalPrice += getSubtotal(cartItem.finalcount,cartItem.item.price)
+  });
+  return totalPrice;
 }
 
 function getSavePrice(cartItems){
-    var totalSavePrice = 0;
-    cartItems.forEach(function(cartItem){
-      totalSavePrice += getSubtotal(cartItem.discount, cartItem.item.price);
-    });
-    return totalSavePrice;
+  var totalSavePrice = 0;
+  cartItems.forEach(function(cartItem){
+    totalSavePrice += getSubtotal(cartItem.discount, cartItem.item.price);
+  });
+  return totalSavePrice;
 }
 
 function getItemString(cartItems){
@@ -112,7 +112,7 @@ function getItemString(cartItems){
                    '数量' + '：' + cartItem.count +cartItem.item.unit + '，'+
                    '单价' + '：' + formatPrice(cartItem.item.price) + '(元)' + '，' +
                    '小计' + '：' + subTotal + '(元)' +'\n';
-    });
+  });
   return itemString;
 }
 
