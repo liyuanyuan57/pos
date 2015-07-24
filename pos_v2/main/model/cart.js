@@ -17,3 +17,11 @@ function findCartItem(cartItems,barcode){
     }
   }
 }
+
+Cart.prototype.getTotalPrice = function(){
+  var totalPrice = 0;
+  this.cartItems.forEach(function(cartItem){
+    totalPrice += cartItem.getSubTotal();
+  });
+  return totalPrice;
+}

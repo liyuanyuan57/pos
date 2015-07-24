@@ -1,8 +1,17 @@
-function printReceipt(tagItems){
-  var tempCart = new TempCart(tagItems);
-  var tempCartItems = tempCart.getTempCartItems();
-  var cart = new Cart(tempCartItems);
-  var cartItems = cart.getCartItems();
-  var  pos = new PosWorker(cartItems);
-  console.log(pos.getReceipt());
-}
+function printReceipt(tags){
+    var scanner = new Scanner();
+    var cart = new Cart();
+    var pos = new Pos(scanner, cart);
+
+    var promotion = new Promotion();
+    pos.scan(tags);
+    var processor = new Processor(cart,promotion);
+
+    var promotioncalculate = new PromotionCalculate();
+     processor.getPromotionItems(promotioncalculate);
+
+    var utils = new Utils();
+    var receipt = new Receipt(cart, processor,utils);
+  // console.log(receipt.getReciptString());
+    console.log(pos.print(receipt));
+ }
